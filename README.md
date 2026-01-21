@@ -551,29 +551,6 @@ app.run(debug=True, port=5001, host='127.0.0.1')  # Change 5001 to another port
 - Supported formats: PNG, JPG, JPEG, GIF, BMP
 - Verify OCR installation: `GET /api/test-ocr`
 
-## 📝 License
 
-This project is created for educational/demonstration purposes.
 
-## 👤 Author
-
-Created as part of an AI-powered appointment scheduler assignment.
-
-## 📞 Support
-
-For issues or questions:
-1. Check the Troubleshooting section
-2. Verify all dependencies are installed
-3. Test OCR installation: `python test_ocr.py`
-4. Check server logs for detailed error messages
-
----
-
-**Note**: This is a development/demo version. For production use, consider:
-- Using a production WSGI server (Gunicorn, uWSGI)
-- Adding authentication/authorization
-- Implementing rate limiting
-- Adding logging and monitoring
-- Using a more robust NLP library for entity extraction
-- Database integration for appointment storage
 
