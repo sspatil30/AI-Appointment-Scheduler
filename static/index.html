@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Appointment Scheduler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+            display: block;
+            visibility: visible;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: block;
+            visibility: visible;
+        }
+
+        #text-input-section {
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        #image-input-section {
+            display: none;
+        }
+
+        #image-input-section.show {
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+            background: white;
+            color: #333;
+            min-height: 100px;
+            display: block;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+            color: #333;
+            display: block;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-section pre {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-ok {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-clarification {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            font-weight: 700;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+            border-radius: 8px 8px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI-Powered Appointment Scheduler</h1>
+        <p class="subtitle">Parse natural language or document-based appointment requests</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('text')">Text Input</button>
+            <button class="tab" onclick="switchTab('image')">Image Upload</button>
+        </div>
+
+        <div class="input-section">
+            <div id="text-input-section">
+                <div class="input-group">
+                    <label for="appointment-text">Enter appointment request:</label>
+                    <textarea id="appointment-text" rows="4" placeholder="e.g., Book dentist next Friday at 3pm"></textarea>
+                </div>
+            </div>
+
+            <div id="image-input-section">
+                <div class="input-group">
+                    <label for="appointment-image">Upload image (scanned notes, emails, etc.):</label>
+                    <input type="file" id="appointment-image" accept="image/*">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="process-btn" onclick="processAppointment()">Process Appointment</button>
+                <button onclick="clearResults()">Clear</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px;">Processing...</p>
+        </div>
+
+        <div class="results" id="results">
+            <div class="result-section">
+                <h3>📝 Raw Text</h3>
+                <pre id="raw-text-result">-</pre>
+            </div>
+
+            <div class="result-section">
+                <h3>🔍 Extracted Entities</h3>
+                <pre id="entities-result">-</pre>
+            </div>
+
+            <div class="result-section">
+                <h3>📅 Normalized Date/Time</h3>
+                <pre id="normalized-result">-</pre>
+            </div>
+
+            <div class="result-section">
+                <h3>✅ Final Appointment</h3>
+                <pre id="appointment-result">-</pre>
+                <div id="status-badge"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const textSection = document.getElementById('text-input-section');
+            const imageSection = document.getElementById('image-input-section');
+            const tabs = document.querySelectorAll('.tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'text') {
+                textSection.style.display = 'block';
+                textSection.style.visibility = 'visible';
+                imageSection.style.display = 'none';
+                imageSection.classList.remove('show');
+                tabs[0].classList.add('active');
+            } else {
+                textSection.style.display = 'none';
+                imageSection.style.display = 'block';
+                imageSection.style.visibility = 'visible';
+                imageSection.classList.add('show');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        async function processAppointment() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const processBtn = document.getElementById('process-btn');
+
+            loading.classList.add('show');
+            results.classList.remove('show');
+            processBtn.disabled = true;
+
+            try {
+                const textInput = document.getElementById('appointment-text').value.trim();
+                const imageInput = document.getElementById('appointment-image').files[0];
+
+                if (!textInput && !imageInput) {
+                    alert('Please enter text or upload an image');
+                    loading.classList.remove('show');
+                    processBtn.disabled = false;
+                    return;
+                }
+
+                let response;
+                let data;
+
+                if (imageInput) {
+                    const formData = new FormData();
+                    formData.append('image', imageInput);
+                    if (textInput) {
+                        formData.append('text', textInput);
+                    }
+                    response = await fetch('http://127.0.0.1:5001/api/appointment', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    response = await fetch('http://127.0.0.1:5001/api/appointment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ text: textInput })
+                    });
+                }
+
+                // Check if response is OK
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = `Error ${response.status}: ${response.statusText}`;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.error || errorMessage;
+                    } catch (e) {
+                        // If it's HTML, extract a simple message
+                        if (errorText.includes('<!doctype') || errorText.includes('<html')) {
+                            errorMessage = `Server error: ${response.status} ${response.statusText}`;
+                        } else {
+                            errorMessage = errorText.substring(0, 200);
+                        }
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                // Try to parse as JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error(`Expected JSON but got ${contentType || 'unknown content type'}`);
+                }
+
+                // Display results
+                document.getElementById('raw-text-result').textContent = data.raw_text || '-';
+                document.getElementById('entities-result').textContent = JSON.stringify(data.entities || {}, null, 2);
+                document.getElementById('normalized-result').textContent = JSON.stringify(data.normalized || {}, null, 2);
+                document.getElementById('appointment-result').textContent = JSON.stringify(data.appointment || {}, null, 2);
+
+                // Status badge
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.innerHTML = '';
+
+                if (data.status === 'ok') {
+                    statusBadge.innerHTML = '<span class="status-badge status-ok">✓ Appointment Created Successfully</span>';
+                } else if (data.status === 'needs_clarification') {
+                    statusBadge.innerHTML = `<span class="status-badge status-clarification">⚠ ${data.message || 'Needs Clarification'}</span>`;
+                } else if (data.error) {
+                    statusBadge.innerHTML = `<span class="status-badge status-error">✗ ${data.error}</span>`;
+                }
+
+                results.classList.add('show');
+            } catch (error) {
+                console.error('Error:', error);
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.innerHTML = `<span class="status-badge status-error">✗ ${error.message}</span>`;
+                results.classList.add('show');
+            } finally {
+                loading.classList.remove('show');
+                processBtn.disabled = false;
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('appointment-text').value = '';
+            document.getElementById('appointment-image').value = '';
+        }
+    </script>
+</body>
+</html>
