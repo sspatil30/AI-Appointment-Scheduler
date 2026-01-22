@@ -2,7 +2,7 @@
 
 A complete backend service that parses natural language or document-based appointment requests and converts them into structured scheduling data. The system handles both typed text and noisy image inputs (e.g., scanned notes, emails) with OCR, entity extraction, normalization, and guardrails for ambiguity.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Problem Statement](#problem-statement)
 - [Architecture](#architecture)
@@ -13,7 +13,7 @@ A complete backend service that parses natural language or document-based appoin
 - [Project Structure](#project-structure)
 - [Evaluation Criteria Coverage](#evaluation-criteria-coverage)
 
-## 🎯 Problem Statement
+## Problem Statement
 
 Build a backend service that parses natural language or document-based appointment requests and converts them into structured scheduling data. The system should handle both typed text and noisy image inputs (e.g., scanned notes, emails). The pipeline includes:
 
@@ -22,7 +22,7 @@ Build a backend service that parses natural language or document-based appointme
 3. **Normalization** - Map phrases to ISO date/time in Asia/Kolkata timezone
 4. **Guardrails** - Detect ambiguous inputs and request clarification
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐
@@ -73,7 +73,7 @@ Build a backend service that parses natural language or document-based appointme
 - **NLP**: Regex-based entity extraction with spaCy support
 - **Frontend**: HTML/CSS/JavaScript (Simple UI for testing)
 
-## ✨ Features
+## Features
 
 1. **Multi-Input Support**
    - Text input via JSON or form data
@@ -99,7 +99,7 @@ Build a backend service that parses natural language or document-based appointme
    - Combined endpoint for complete pipeline
    - CORS enabled for frontend integration
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
@@ -177,7 +177,7 @@ Open your browser and navigate to:
 http://127.0.0.1:5001
 ```
 
-## 📚 API Documentation
+##  API Documentation
 
 ### Base URL
 ```
@@ -335,7 +335,7 @@ Check if Tesseract OCR is properly installed.
 }
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Using cURL
 
@@ -424,7 +424,7 @@ curl -X POST http://127.0.0.1:5001/api/normalize \
    - Normalized Date/Time
    - Final Appointment JSON
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Appointment/
@@ -516,7 +516,7 @@ The system recognizes and maps the following departments:
 
 All dates and times are normalized to **Asia/Kolkata** timezone as specified in the problem statement.
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Tesseract OCR Not Found
 
@@ -550,6 +550,7 @@ app.run(debug=True, port=5001, host='127.0.0.1')  # Change 5001 to another port
 - Use clear, high-contrast images
 - Supported formats: PNG, JPG, JPEG, GIF, BMP
 - Verify OCR installation: `GET /api/test-ocr`
+
 
 
 
